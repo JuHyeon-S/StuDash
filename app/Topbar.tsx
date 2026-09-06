@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { LogoutIcon } from "./components/icons";
 
 function getDate(): { time: string; date: string } {
   const now: Date = new Date();
@@ -20,7 +22,13 @@ function getDate(): { time: string; date: string } {
 }
 
 export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
+  const router = useRouter();
   const [date, setDate] = useState(getDate());
+
+  function handleLogout() {
+    document.cookie = "studash_auth=; path=/; max-age=0";
+    router.push("/login");
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,6 +80,15 @@ export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
         <span className="text-[11px] font-mono text-gray-500">
           NODE&nbsp;SOC-EAST-01
         </span>
+        <span className="w-px h-6 bg-gray-700" />
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-danger transition-colors"
+        >
+          <LogoutIcon className="w-[15px] h-[15px]" />
+          로그아웃
+        </button>
       </div>
     </div>
   );

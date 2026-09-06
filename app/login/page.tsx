@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import Panel from "../components/Panel";
 
 export default function LoginPage() {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  const [userId, setUserId] = useState("user@email.com"); // 임시 ID 추후 수정
+  const [password, setPassword] = useState("userpassword"); // 임시 PW 추후 수정
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -18,11 +18,13 @@ export default function LoginPage() {
       return;
     }
     if (!userId.includes("@")) {
-      setError("올바른 이메일 형식이 아니에요.");
+      setError("올바른 형식이 아닙니다.");
       return;
     }
 
     setError("");
+    // 현재 로그인 연결 X 입력조건만 맞으면 이동함
+    document.cookie = "studash_auth=1; path=/; max-age=86400";
     router.push("/");
   }
 
@@ -42,6 +44,7 @@ export default function LoginPage() {
                 setUserId(e.target.value);
               }}
               className="bg-panel-border/30 border border-panel-border rounded-md px-3 py-2 text-sm text-white outline-none focus:border-accent"
+              value="user@email.com" // 임시 ID 추후 수정
             ></input>
             <input
               type="password"
@@ -51,6 +54,7 @@ export default function LoginPage() {
                 setPassword(e.target.value);
               }}
               className="bg-panel-border/30 border border-panel-border rounded-md px-3 py-2 text-sm text-white outline-none focus:border-accent"
+              value="userpassword" // 임시 PW 추후 수정
             ></input>
             {error && <p className="text-xs text-danger">{error}</p>}
             <button

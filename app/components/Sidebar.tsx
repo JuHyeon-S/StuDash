@@ -14,8 +14,8 @@ interface NavItem {
 const items: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: GridIcon },
   { href: "/events", label: "Events", icon: ListIcon },
-  { href: "/alerts", label: "Alerts", icon: BellIcon },
-  { href: "/settings", label: "Settings", icon: SettingsIcon },
+  // { href: "/alerts", label: "Alerts", icon: BellIcon },
+  // { href: "/settings", label: "Settings", icon: SettingsIcon },
 ];
 
 export default function Sidebar() {
