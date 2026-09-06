@@ -2,7 +2,7 @@
 
 보안 관제(SOC) 컨셉의 실시간 대시보드 토이 프로젝트입니다. 침입 탐지 로그, 서버 상태, 공격 발생 추이/경로 등을 한 화면에서 모니터링하는 형태로 만들었습니다.
 
-🔗 **Live Demo**: [배포 링크 넣기]
+🔗 **Live Demo**: [StuDash](https://stu-dash-cyan.vercel.app/dashboard)
 
 <!-- 스크린샷/GIF 여기에 추가 -->
 <!-- ![dashboard preview](./docs/preview.png) -->
