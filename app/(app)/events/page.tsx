@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Panel from "../../components/Panel";
 import PageHeader from "@/app/components/PageHeader";
 import SearchBar from "@/app/components/SearchBar";
@@ -60,105 +60,98 @@ const columns: Column<LogEntry>[] = [
   },
   { key: "action", header: "ACTION", width: 110 },
 ];
-
-const logs: LogEntry[] = [
-  {
-    time: "14:32:07",
-    ip: "185.220.101.47",
-    type: "SQL Injection Attempt",
-    target: "db-02.prod",
-    action: "Blocked",
-    severity: "critical",
-  },
-  {
-    time: "14:29:51",
-    ip: "103.45.12.9",
-    type: "Brute Force Login",
-    target: "auth-04.prod",
-    action: "Rate Limited",
-    severity: "warning",
-  },
-  {
-    time: "14:26:18",
-    ip: "45.155.204.88",
-    type: "Remote Code Execution",
-    target: "api-03.prod",
-    action: "Blocked",
-    severity: "critical",
-  },
-  {
-    time: "14:21:40",
-    ip: "192.168.1.104",
-    type: "Unusual Login Location",
-    target: "web-01.prod",
-    action: "Flagged",
-    severity: "info",
-  },
-  {
-    time: "14:18:02",
-    ip: "91.242.68.3",
-    type: "Port Scan Detected",
-    target: "cache-05.prod",
-    action: "Blocked",
-    severity: "warning",
-  },
-  {
-    time: "14:12:55",
-    ip: "198.51.100.23",
-    type: "DDoS Traffic Spike",
-    target: "web-01.prod",
-    action: "Mitigated",
-    severity: "critical",
-  },
-  {
-    time: "14:05:33",
-    ip: "203.0.113.77",
-    type: "New Device Login",
-    target: "auth-04.prod",
-    action: "Verified",
-    severity: "info",
-  },
-  {
-    time: "13:58:14",
-    ip: "194.26.29.156",
-    type: "Malware Signature Match",
-    target: "db-02.prod",
-    action: "Quarantined",
-    severity: "critical",
-  },
-  {
-    time: "13:47:02",
-    ip: "45.146.164.110",
-    type: "Suspicious File Upload",
-    target: "web-02.prod",
-    action: "Blocked",
-    severity: "warning",
-  },
-  {
-    time: "13:39:45",
-    ip: "89.248.165.74",
-    type: "API Rate Limit Exceeded",
-    target: "api-03.prod",
-    action: "Throttled",
-    severity: "info",
-  },
-  {
-    time: "13:22:31",
-    ip: "5.188.206.18",
-    type: "Privilege Escalation Attempt",
-    target: "auth-04.prod",
-    action: "Blocked",
-    severity: "critical",
-  },
-  {
-    time: "13:10:09",
-    ip: "141.98.11.87",
-    type: "Credential Stuffing",
-    target: "web-01.prod",
-    action: "Blocked",
-    severity: "warning",
-  },
+const IPS = [
+  "185.220.101.47",
+  "103.45.12.9",
+  "45.155.204.88",
+  "192.168.1.104",
+  "91.242.68.3",
+  "198.51.100.23",
+  "203.0.113.77",
+  "194.26.29.156",
+  "45.146.164.110",
+  "89.248.165.74",
+  "5.188.206.18",
+  "141.98.11.87",
+  "172.104.22.9",
+  "185.147.23.4",
+  "77.83.36.19",
+  "92.63.197.12",
+  "43.129.10.55",
+  "154.213.184.9",
+  "94.102.61.7",
+  "45.61.185.20",
 ];
+
+const EVENT_TYPES: { type: string; severity: Severity }[] = [
+  { type: "SQL Injection Attempt", severity: "critical" },
+  { type: "Brute Force Login", severity: "warning" },
+  { type: "Remote Code Execution", severity: "critical" },
+  { type: "Unusual Login Location", severity: "info" },
+  { type: "Port Scan Detected", severity: "warning" },
+  { type: "DDoS Traffic Spike", severity: "critical" },
+  { type: "New Device Login", severity: "info" },
+  { type: "Malware Signature Match", severity: "critical" },
+  { type: "Suspicious File Upload", severity: "warning" },
+  { type: "API Rate Limit Exceeded", severity: "info" },
+  { type: "Privilege Escalation Attempt", severity: "critical" },
+  { type: "Credential Stuffing", severity: "warning" },
+];
+
+const TARGETS = [
+  "web-01.prod",
+  "web-02.prod",
+  "api-03.prod",
+  "db-02.prod",
+  "auth-04.prod",
+  "cache-05.prod",
+];
+const ACTIONS = [
+  "Blocked",
+  "Flagged",
+  "Rate Limited",
+  "Mitigated",
+  "Quarantined",
+  "Verified",
+  "Throttled",
+];
+
+function generateLogs(count: number): LogEntry[] {
+  const logs: LogEntry[] = [];
+  let hour = 14,
+    minute = 32,
+    second = 7;
+
+  for (let i = 0; i < count; i++) {
+    const event = EVENT_TYPES[i % EVENT_TYPES.length];
+    const time = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:${String(second).padStart(2, "0")}`;
+
+    logs.push({
+      time,
+      ip: IPS[i % IPS.length],
+      type: event.type,
+      target: TARGETS[i % TARGETS.length],
+      action: ACTIONS[i % ACTIONS.length],
+      severity: event.severity,
+    });
+
+    second -= 7;
+    if (second < 0) {
+      second += 60;
+      minute -= 1;
+    }
+    if (minute < 0) {
+      minute += 60;
+      hour -= 1;
+    }
+    if (hour < 0) hour += 24;
+  }
+
+  return logs;
+}
+
+const logs: LogEntry[] = generateLogs(56);
+
 export default function EventsPage() {
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState<
@@ -173,6 +166,20 @@ export default function EventsPage() {
       severityFilter === "All" || log.severity === severityFilter;
     return matchesSearch && matchesSeverity;
   });
+
+  const PAGE_SIZE = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // 검색어/필터 바뀌면 1페이지로 리셋
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, severityFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageItems = filtered.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
   return (
     <div className="p-6 flex flex-col gap-4">
@@ -201,8 +208,37 @@ export default function EventsPage() {
         ))}
       </div>
       <Panel>
-        <GridTable columns={columns} data={filtered}></GridTable>
+        <GridTable columns={columns} data={pageItems}></GridTable>
       </Panel>
+      <div className="flex items-center justify-center gap-2">
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          disabled={currentPage === 1}
+          className="text-xs text-gray-400 disabled:opacity-30 px-3 py-1.5 rounded-md hover:bg-panel-border/30"
+        >
+          이전
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={`text-xs w-8 h-8 rounded-md ${
+              page === currentPage
+                ? "bg-accent/15 text-accent font-bold"
+                : "text-gray-400 hover:bg-panel-border/30"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          disabled={currentPage === totalPages}
+          className="text-xs text-gray-400 disabled:opacity-30 px-3 py-1.5 rounded-md hover:bg-panel-border/30"
+        >
+          다음
+        </button>
+      </div>
     </div>
   );
 }
