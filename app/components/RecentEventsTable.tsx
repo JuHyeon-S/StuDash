@@ -21,7 +21,7 @@ const columns: Column<LogEntry>[] = [
   {
     key: "severity",
     header: "SEV",
-    width: 60,
+    width: 80,
     render: (row) => (
       <span
         className={`w-fit text-[10px] font-bold px-2 py-0.5 rounded ${SEVERITY_STYLES[row.severity]}`}
@@ -46,12 +46,12 @@ const columns: Column<LogEntry>[] = [
   {
     key: "target",
     header: "TARGET",
-    width: 100,
+    width: 140,
     render: (row) => (
       <span className="font-mono text-gray-500">{row.target}</span>
     ),
   },
-  { key: "action", header: "ACTION", width: 90 },
+  { key: "action", header: "ACTION", width: 100 },
 ];
 const logs: LogEntry[] = [
   {

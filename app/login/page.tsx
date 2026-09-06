@@ -44,7 +44,7 @@ export default function LoginPage() {
                 setUserId(e.target.value);
               }}
               className="bg-panel-border/30 border border-panel-border rounded-md px-3 py-2 text-sm text-white outline-none focus:border-accent"
-              value="user@email.com" // 임시 ID 추후 수정
+              value={userId} // 임시 ID 추후 수정
             ></input>
             <input
               type="password"
@@ -54,7 +54,7 @@ export default function LoginPage() {
                 setPassword(e.target.value);
               }}
               className="bg-panel-border/30 border border-panel-border rounded-md px-3 py-2 text-sm text-white outline-none focus:border-accent"
-              value="userpassword" // 임시 PW 추후 수정
+              value={password} // 임시 PW 추후 수정
             ></input>
             {error && <p className="text-xs text-danger">{error}</p>}
             <button
