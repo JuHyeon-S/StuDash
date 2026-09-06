@@ -58,8 +58,8 @@ export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
           </span>
           <div className="text-2xl font-bold">StuDash</div>
         </Link>
-        <span className="text-gray-400">|</span>
-        <div className="text-lg text-gray-400">Overview</div>
+        {/* <span className="text-gray-400">|</span> */}
+        {/* <div className="text-lg text-gray-400">Overview</div> */}
       </div>
       <div className="flex items-center gap-6">
         {liveBadge && (
