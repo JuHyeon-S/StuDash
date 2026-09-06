@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Topbar from "./Topbar";
+import localFont from "next/font/local";
+
+const pretendardR = localFont({
+  src: "./fonts/Pretendard-Regular.woff", // 실제 넣으신 파일명으로 바꾸세요
+  variable: "--font-pretendard-r",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${pretendardR.variable} ${pretendardR.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {/* <Topbar /> */}
