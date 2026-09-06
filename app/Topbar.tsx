@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 function getDate(): { time: string; date: string } {
   const now: Date = new Date();
@@ -32,7 +33,7 @@ export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
   return (
     <div className="flex items-center justify-between text-white p-4 pr-6 pl-6 border-b border-gray-700">
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <span className="w-6 h-6 rounded-md bg-accent flex items-center justify-center shrink-0">
             <svg
               viewBox="0 0 24 24"
@@ -48,7 +49,7 @@ export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
             </svg>
           </span>
           <div className="text-2xl font-bold">StuDash</div>
-        </div>
+        </Link>
         <span className="text-gray-400">|</span>
         <div className="text-lg text-gray-400">Overview</div>
       </div>
