@@ -1,10 +1,10 @@
-import StatRow from "../components/StatRow";
-import ThreatActivityChart from "../components/ThreatActivityChart";
-import ThreatCategoriesChart from "../components/ThreatCategoriesChart";
-import TopTargetedServersChart from "../components/TopTargetedServersChart";
-import AttackOriginsMap from "../components/AttackOriginsMap";
-import RecentEventsTable from "../components/RecentEventsTable";
-import ServerStatusGrid from "../components/ServerStatusGrid";
+import StatRow from "../../components/StatRow";
+import ThreatActivityChart from "../../components/ThreatActivityChart";
+import ThreatCategoriesChart from "../../components/ThreatCategoriesChart";
+import TopTargetedServersChart from "../../components/TopTargetedServersChart";
+import AttackOriginsMap from "../../components/AttackOriginsMap";
+import RecentEventsTable from "../../components/RecentEventsTable";
+import ServerStatusGrid from "../../components/ServerStatusGrid";
 
 export default function Dashboard() {
   return (
