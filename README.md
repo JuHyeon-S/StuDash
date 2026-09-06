@@ -47,5 +47,3 @@ cd StuDash
 npm install
 npm run dev
 ```
-
-`https://stu-dash-cyan.vercel.app/dashboard`에서 확인할 수 있습니다.

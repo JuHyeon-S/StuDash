@@ -18,7 +18,7 @@ function getDate(): { time: string; date: string } {
   };
 }
 
-export default function Topbar() {
+export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
   const [date, setDate] = useState(getDate());
 
   useEffect(() => {
@@ -53,10 +53,12 @@ export default function Topbar() {
         <div className="text-lg text-gray-400">Overview</div>
       </div>
       <div className="flex items-center gap-6">
-        <div className="liveCheck text-white px-3 py-1 rounded-full flex items-center space-x-2">
-          <span className="dot"></span>
-          <span>Live</span>
-        </div>
+        {liveBadge && (
+          <div className="liveCheck text-white px-3 py-1 rounded-full flex items-center space-x-2">
+            <span className="dot"></span>
+            <span>Live</span>
+          </div>
+        )}
         <div className="text-right">
           <div className="text-2xl font-bold" suppressHydrationWarning>
             {date.time}
