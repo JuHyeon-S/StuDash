@@ -1,21 +1,6 @@
 import Panel from "./Panel";
 import GridTable, { Column } from "./GridTable";
-
-type Severity = "critical" | "warning" | "info";
-
-interface LogEntry {
-  time: string;
-  ip: string;
-  type: string;
-  target: string;
-  action: string;
-  severity: Severity;
-}
-const SEVERITY_STYLES: Record<Severity, string> = {
-  critical: "bg-danger/15 text-danger",
-  warning: "bg-warning/15 text-warning",
-  info: "bg-info/15 text-info",
-};
+import { EVENTS, SEVERITY_STYLES, type LogEntry } from "../lib/events";
 
 const columns: Column<LogEntry>[] = [
   {
@@ -53,64 +38,8 @@ const columns: Column<LogEntry>[] = [
   },
   { key: "action", header: "ACTION", width: 100 },
 ];
-const logs: LogEntry[] = [
-  {
-    time: "14:32:07",
-    ip: "185.220.101.47",
-    type: "SQL Injection Attempt",
-    target: "db-02.prod",
-    action: "Blocked",
-    severity: "critical",
-  },
-  {
-    time: "14:29:51",
-    ip: "103.45.12.9",
-    type: "Brute Force Login",
-    target: "auth-04.prod",
-    action: "Rate Limited",
-    severity: "warning",
-  },
-  {
-    time: "14:26:18",
-    ip: "45.155.204.88",
-    type: "Remote Code Execution",
-    target: "api-03.prod",
-    action: "Blocked",
-    severity: "critical",
-  },
-  {
-    time: "14:21:40",
-    ip: "192.168.1.104",
-    type: "Unusual Login Location",
-    target: "web-01.prod",
-    action: "Flagged",
-    severity: "info",
-  },
-  {
-    time: "14:18:02",
-    ip: "91.242.68.3",
-    type: "Port Scan Detected",
-    target: "cache-05.prod",
-    action: "Blocked",
-    severity: "warning",
-  },
-  {
-    time: "14:12:55",
-    ip: "198.51.100.23",
-    type: "DDoS Traffic Spike",
-    target: "web-01.prod",
-    action: "Mitigated",
-    severity: "critical",
-  },
-  {
-    time: "14:05:33",
-    ip: "203.0.113.77",
-    type: "New Device Login",
-    target: "auth-04.prod",
-    action: "Verified",
-    severity: "info",
-  },
-];
+
+const recentEvents = EVENTS.slice(0, 7);
 
 export default function RecentEventsTable() {
   const total = 240;
@@ -124,7 +53,16 @@ export default function RecentEventsTable() {
           </span>
         </div>
       </div>
-      <GridTable columns={columns} data={logs}></GridTable>
+      <GridTable
+        columns={columns}
+        data={recentEvents}
+        rowKey={(row) => row.id}
+        getRowHref={(row) => `/events/${row.id}`}
+        getRowLabel={(row) =>
+          `${row.type} 이벤트 상세보기, 심각도 ${row.severity}, ${row.time} 발생`
+        }
+        ariaLabel="최근 침입 탐지 이벤트"
+      ></GridTable>
     </Panel>
   );
 }

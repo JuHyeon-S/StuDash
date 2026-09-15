@@ -1,12 +1,7 @@
 import Link from "next/link";
 import Panel from "../components/Panel";
 import PageHeader from "../components/PageHeader";
-import {
-  GridIcon,
-  ListIcon,
-  BellIcon,
-  SettingsIcon,
-} from "../components/icons";
+import { GridIcon, ListIcon } from "../components/icons";
 import type { ComponentType, SVGProps } from "react";
 
 interface NavCard {

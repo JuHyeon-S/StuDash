@@ -93,6 +93,15 @@ export function SearchIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function ArrowLeftIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M19 12H5" />
+      <path d="M11 18l-6-6 6-6" />
+    </svg>
+  );
+}
+
 export function SettingsIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...base} {...props}>

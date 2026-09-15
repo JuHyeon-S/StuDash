@@ -2,14 +2,11 @@
 import Panel from "./Panel";
 import {
   ResponsiveContainer,
-  LineChart,
   ComposedChart,
   CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
-  Line,
-  Legend,
   Area,
 } from "recharts";
 

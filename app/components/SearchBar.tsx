@@ -10,13 +10,17 @@ export default function SearchBar({
   placeholder?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 bg-panel border border-panel-border rounded-lg px-3 py-2 max-w-[420px] w-full">
-      <SearchIcon className="w-[15px] h-[15px] text-gray-500 shrink-0" />
+    <div className="flex items-center gap-2 bg-panel border border-panel-border rounded-lg px-3 py-2 max-w-[420px] w-full focus-within:border-accent">
+      <SearchIcon
+        aria-hidden="true"
+        className="w-[15px] h-[15px] text-gray-500 shrink-0"
+      />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-label={placeholder ?? "검색"}
         className="bg-transparent outline-none text-sm text-white placeholder:text-gray-500 w-full"
       />
     </div>

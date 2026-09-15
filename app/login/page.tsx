@@ -36,9 +36,14 @@ export default function LoginPage() {
         </div>
         <div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            <label htmlFor="login-email" className="sr-only">
+              이메일
+            </label>
             <input
+              id="login-email"
               type="email"
               placeholder="E-mail"
+              autoComplete="email"
               onChange={(e) => {
                 e.preventDefault();
                 setUserId(e.target.value);
@@ -46,9 +51,14 @@ export default function LoginPage() {
               className="bg-panel-border/30 border border-panel-border rounded-md px-3 py-2 text-sm text-white outline-none focus:border-accent"
               value={userId} // 임시 ID 추후 수정
             ></input>
+            <label htmlFor="login-password" className="sr-only">
+              비밀번호
+            </label>
             <input
+              id="login-password"
               type="password"
               placeholder="Password"
+              autoComplete="current-password"
               onChange={(e) => {
                 e.preventDefault();
                 setPassword(e.target.value);
@@ -56,10 +66,14 @@ export default function LoginPage() {
               className="bg-panel-border/30 border border-panel-border rounded-md px-3 py-2 text-sm text-white outline-none focus:border-accent"
               value={password} // 임시 PW 추후 수정
             ></input>
-            {error && <p className="text-xs text-danger">{error}</p>}
+            {error && (
+              <p role="alert" className="text-xs text-danger">
+                {error}
+              </p>
+            )}
             <button
               type="submit"
-              className="bg-accent text-[oklch(13%_0.02_250)] font-semibold text-sm rounded-md py-2 mt-2"
+              className="bg-accent text-[oklch(13%_0.02_250)] font-semibold text-sm rounded-md py-2 mt-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               로그인
             </button>

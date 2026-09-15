@@ -11,7 +11,8 @@ export default function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-colors ${
+      aria-pressed={active}
+      className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
         active
           ? "bg-accent/15 text-accent border-accent/35"
           : "bg-transparent text-gray-500 border-panel-border hover:text-gray-300"

@@ -63,8 +63,11 @@ export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
       </div>
       <div className="flex items-center gap-6">
         {liveBadge && (
-          <div className="liveCheck text-white px-3 py-1 rounded-full flex items-center space-x-2">
-            <span className="dot"></span>
+          <div
+            role="status"
+            className="liveCheck text-white px-3 py-1 rounded-full flex items-center space-x-2"
+          >
+            <span aria-hidden="true" className="dot"></span>
             <span>Live</span>
           </div>
         )}
@@ -84,9 +87,9 @@ export default function Topbar({ liveBadge = false }: { liveBadge?: boolean }) {
         <button
           type="button"
           onClick={handleLogout}
-          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-danger transition-colors"
+          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-danger transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent rounded"
         >
-          <LogoutIcon className="w-[15px] h-[15px]" />
+          <LogoutIcon aria-hidden="true" className="w-[15px] h-[15px]" />
           로그아웃
         </button>
       </div>

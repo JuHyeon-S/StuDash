@@ -1,28 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Panel from "../../components/Panel";
 import PageHeader from "@/app/components/PageHeader";
 import SearchBar from "@/app/components/SearchBar";
 import FilterChip from "@/app/components/FilterChip";
 import GridTable, { Column } from "@/app/components/GridTable";
-
-type Severity = "critical" | "warning" | "info";
-
-interface LogEntry {
-  time: string;
-  ip: string;
-  type: string;
-  target: string;
-  action: string;
-  severity: Severity;
-}
-
-const SEVERITY_STYLES: Record<Severity, string> = {
-  critical: "bg-danger/15 text-danger",
-  warning: "bg-warning/15 text-warning",
-  info: "bg-info/15 text-info",
-};
+import { EVENTS, SEVERITY_STYLES, type LogEntry } from "@/app/lib/events";
 
 const columns: Column<LogEntry>[] = [
   {
@@ -60,97 +44,7 @@ const columns: Column<LogEntry>[] = [
   },
   { key: "action", header: "ACTION", width: 110 },
 ];
-const IPS = [
-  "185.220.101.47",
-  "103.45.12.9",
-  "45.155.204.88",
-  "192.168.1.104",
-  "91.242.68.3",
-  "198.51.100.23",
-  "203.0.113.77",
-  "194.26.29.156",
-  "45.146.164.110",
-  "89.248.165.74",
-  "5.188.206.18",
-  "141.98.11.87",
-  "172.104.22.9",
-  "185.147.23.4",
-  "77.83.36.19",
-  "92.63.197.12",
-  "43.129.10.55",
-  "154.213.184.9",
-  "94.102.61.7",
-  "45.61.185.20",
-];
-
-const EVENT_TYPES: { type: string; severity: Severity }[] = [
-  { type: "SQL Injection Attempt", severity: "critical" },
-  { type: "Brute Force Login", severity: "warning" },
-  { type: "Remote Code Execution", severity: "critical" },
-  { type: "Unusual Login Location", severity: "info" },
-  { type: "Port Scan Detected", severity: "warning" },
-  { type: "DDoS Traffic Spike", severity: "critical" },
-  { type: "New Device Login", severity: "info" },
-  { type: "Malware Signature Match", severity: "critical" },
-  { type: "Suspicious File Upload", severity: "warning" },
-  { type: "API Rate Limit Exceeded", severity: "info" },
-  { type: "Privilege Escalation Attempt", severity: "critical" },
-  { type: "Credential Stuffing", severity: "warning" },
-];
-
-const TARGETS = [
-  "web-01.prod",
-  "web-02.prod",
-  "api-03.prod",
-  "db-02.prod",
-  "auth-04.prod",
-  "cache-05.prod",
-];
-const ACTIONS = [
-  "Blocked",
-  "Flagged",
-  "Rate Limited",
-  "Mitigated",
-  "Quarantined",
-  "Verified",
-  "Throttled",
-];
-
-function generateLogs(count: number): LogEntry[] {
-  const logs: LogEntry[] = [];
-  let hour = 14,
-    minute = 32,
-    second = 7;
-
-  for (let i = 0; i < count; i++) {
-    const event = EVENT_TYPES[i % EVENT_TYPES.length];
-    const time = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:${String(second).padStart(2, "0")}`;
-
-    logs.push({
-      time,
-      ip: IPS[i % IPS.length],
-      type: event.type,
-      target: TARGETS[i % TARGETS.length],
-      action: ACTIONS[i % ACTIONS.length],
-      severity: event.severity,
-    });
-
-    second -= 7;
-    if (second < 0) {
-      second += 60;
-      minute -= 1;
-    }
-    if (minute < 0) {
-      minute += 60;
-      hour -= 1;
-    }
-    if (hour < 0) hour += 24;
-  }
-
-  return logs;
-}
-
-const logs: LogEntry[] = generateLogs(56);
+const logs: LogEntry[] = EVENTS;
 
 export default function EventsPage() {
   const [search, setSearch] = useState("");
@@ -170,10 +64,14 @@ export default function EventsPage() {
   const PAGE_SIZE = 20;
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 검색어/필터 바뀌면 1페이지로 리셋
-  useEffect(() => {
+  // 검색어/필터가 바뀌면 1페이지로 리셋.
+  // useEffect로 setState하면 렌더가 한 번 더 발생해서(react-hooks/set-state-in-effect),
+  // React 공식 문서가 권장하는 "렌더 중 이전 값과 비교해서 조정" 패턴으로 처리.
+  const [prevFilters, setPrevFilters] = useState({ search, severityFilter });
+  if (prevFilters.search !== search || prevFilters.severityFilter !== severityFilter) {
+    setPrevFilters({ search, severityFilter });
     setCurrentPage(1);
-  }, [search, severityFilter]);
+  }
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice(
@@ -208,13 +106,26 @@ export default function EventsPage() {
         ))}
       </div>
       <Panel>
-        <GridTable columns={columns} data={pageItems}></GridTable>
+        <GridTable
+          columns={columns}
+          data={pageItems}
+          rowKey={(row) => row.id}
+          getRowHref={(row) => `/events/${row.id}`}
+          getRowLabel={(row) =>
+            `${row.type} 이벤트 상세보기, 심각도 ${row.severity}, ${row.time} 발생, 대상 ${row.target}`
+          }
+          ariaLabel="침입 탐지 이벤트 로그"
+        ></GridTable>
       </Panel>
-      <div className="flex items-center justify-center gap-2">
+      <nav
+        aria-label="이벤트 로그 페이지네이션"
+        className="flex items-center justify-center gap-2"
+      >
         <button
           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
           disabled={currentPage === 1}
-          className="text-xs text-gray-400 disabled:opacity-30 px-3 py-1.5 rounded-md hover:bg-panel-border/30"
+          aria-label="이전 페이지"
+          className="text-xs text-gray-400 disabled:opacity-30 px-3 py-1.5 rounded-md hover:bg-panel-border/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
         >
           이전
         </button>
@@ -222,7 +133,9 @@ export default function EventsPage() {
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
-            className={`text-xs w-8 h-8 rounded-md ${
+            aria-label={`${page} 페이지`}
+            aria-current={page === currentPage ? "page" : undefined}
+            className={`text-xs w-8 h-8 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
               page === currentPage
                 ? "bg-accent/15 text-accent font-bold"
                 : "text-gray-400 hover:bg-panel-border/30"
@@ -234,11 +147,12 @@ export default function EventsPage() {
         <button
           onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
           disabled={currentPage === totalPages}
-          className="text-xs text-gray-400 disabled:opacity-30 px-3 py-1.5 rounded-md hover:bg-panel-border/30"
+          aria-label="다음 페이지"
+          className="text-xs text-gray-400 disabled:opacity-30 px-3 py-1.5 rounded-md hover:bg-panel-border/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
         >
           다음
         </button>
-      </div>
+      </nav>
     </div>
   );
 }
